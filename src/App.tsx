@@ -1,25 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
+import Homepage from './components/Homepage';
+import BookDetails from './components/BookDetails';
+import Authentication from './components/Authentication';
+import Bookmarks from './components/Bookmarks';
+import Cart from './components/Cart';
+import OrderedBooks from './components/OrderedBooks';
+
+const App: React.FC = () => {
+  let data = localStorage.getItem("isLogin");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Authentication />} />
+        {data === "true" ? (
+          <>
+            <Route path="/home" element={<Homepage />} />
+            <Route path="/book/:id" element={<BookDetails />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<OrderedBooks />} />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        )}
+      </Routes>
+    </Router>
   );
 }
 
